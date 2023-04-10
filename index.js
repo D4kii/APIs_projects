@@ -39,90 +39,90 @@ app.use((request, response, next) => {
 
 //EndPoint - Que retorna uma lista de todos os cursos 
 //oferecidos pela escola e suas respectivas informações
-app.get('/v1/lion-school/cursos', cors(), async function (request, response, next) {
+app.get('/v1/lion-school/cursos', cors(), async function(request, response, next) {
 
-    //variável para chamar a função que lista os cursos
-    let cursos = dadosCursos.getListaCursos()
-
-    //Tratamento para validar o sucesso da requisição 
-    if (cursos) {
-        response.status(200);
-        response.json(cursos);
-
-    } else {
-        response.status(500);
-        dadosEstado.message = 'Não foi possível processar por problemas internos'
-    }
-
-
-})
-//EndPoint - Que retorna uma lista de todos os alunos 
-//matriculados na escola e seus respectivos dados, ou alunos específicos de um status estipulado ou curso.
-app.get('/v1/lion-school/alunos', cors(), async function (request, response, next) {
-
-    let alunos;
-    let dadosAluno = {};
-    let siglaCurso = request.query.cursos
-    let status = request.query.status
-    let statusCode;
-
-    if (siglaCurso !== undefined) {
         //variável para chamar a função que lista os cursos
-        if (!isNaN(siglaCurso)) {
-            response.status(400);
-            dadosAluno.message = 'Não foi possível processar pois os dados de entrada que foi enviado não corresponde ao exigido, confira o valor, precisa ser a sigla de um dos cursos'
-        } else {
+        let cursos = dadosCursos.getListaCursos()
 
-            let alunosCurso = dadosCursos.getListaAlunosCurso(siglaCurso);
-            
-            if (alunosCurso) {
-                statusCode = 200;
-                dadosAluno = alunosCurso;
-            } else {
-                statusCode = 404;
-                dadosAluno.message = 'Não foi possível encontrar os dados.'
-            }
+        //Tratamento para validar o sucesso da requisição 
+        if (cursos) {
+            response.status(200);
+            response.json(cursos);
+
+        } else {
+            response.status(500);
+            dadosEstado.message = 'Não foi possível processar por problemas internos'
         }
 
-    } else if (status !== undefined) {
-        //variável para chamar a função que lista os cursos
-        if (!isNaN(status)) {
-            response.status(400);
-            dadosAluno.message = 'Não foi possível processar pois os dados de entrada que foi enviado não corresponde ao exigido, confira o valor, precisa ser a sigla de um dos cursos'
-        } else {
 
-            let alunoStatus = dadosCursos.getListaAlunosStatus(status);
-            
-            if (alunoStatus) {
-                statusCode = 200;
-                dadosAluno = alunoStatus;
+    })
+    //EndPoint - Que retorna uma lista de todos os alunos 
+    //matriculados na escola e seus respectivos dados, ou alunos específicos de um status estipulado ou curso.
+app.get('/v1/lion-school/alunos', cors(), async function(request, response, next) {
+
+        let alunos;
+        let dadosAluno = {};
+        let siglaCurso = request.query.cursos
+        let status = request.query.status
+        let statusCode;
+
+        if (siglaCurso !== undefined) {
+            //variável para chamar a função que lista os cursos
+            if (!isNaN(siglaCurso)) {
+                response.status(400);
+                dadosAluno.message = 'Não foi possível processar pois os dados de entrada que foi enviado não corresponde ao exigido, confira o valor, precisa ser a sigla de um dos cursos'
             } else {
-                statusCode = 404;
-                dadosAluno.message = 'Não foi possível encontrar os dados.'
+
+                let alunosCurso = dadosCursos.getListaAlunosCurso(siglaCurso);
+
+                if (alunosCurso) {
+                    statusCode = 200;
+                    dadosAluno = alunosCurso;
+                } else {
+                    statusCode = 404;
+                    dadosAluno.message = 'Não foi possível encontrar os dados.'
+                }
             }
+
+        } else if (status !== undefined) {
+            //variável para chamar a função que lista os cursos
+            if (!isNaN(status)) {
+                response.status(400);
+                dadosAluno.message = 'Não foi possível processar pois os dados de entrada que foi enviado não corresponde ao exigido, confira o valor, precisa ser a sigla de um dos cursos'
+            } else {
+
+                let alunoStatus = dadosCursos.getListaAlunosStatus(status);
+
+                if (alunoStatus) {
+                    statusCode = 200;
+                    dadosAluno = alunoStatus;
+                } else {
+                    statusCode = 404;
+                    dadosAluno.message = 'Não foi possível encontrar os dados.'
+                }
+            }
+
+        } else {
+            let alunos = dadosCursos.getListaAlunos()
+
+            //Tratamento para validar o sucesso da requisição 
+            if (alunos) {
+                response.status(200);
+                response.json(alunos);
+            }
+            response.status(500);
+            dadosCursos.message = 'Não foi possível processar por problemas internos'
         }
-        
-    } else {
-    let alunos = dadosCursos.getListaAlunos()
-
-    //Tratamento para validar o sucesso da requisição 
-    if (alunos) {
-        response.status(200);
-        response.json(alunos);
-    }
-        response.status(500);
-        dadosCursos.message = 'Não foi possível processar por problemas internos'
-    }
 
 
-    //Retorna o código e o JSON
-    response.status(statusCode);
-    response.json(dadosAluno);
+        //Retorna o código e o JSON
+        response.status(statusCode);
+        response.json(dadosAluno);
 
-})
-//EndPoint - Retorna dados de um aluno específico
-//com base no número de matrícula.
-app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, response, next) {
+    })
+    //EndPoint - Retorna dados de um aluno específico
+    //com base no número de matrícula.
+app.get('/v1/lion-school/alunos/:matricula', cors(), async function(request, response, next) {
 
     let statusCode;
     let dadosAlunoMatricula = {};
@@ -139,6 +139,7 @@ app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, re
 
         let matricula = dadosCursos.getDadosAluno(numeroMatricula);
 
+
         if (matricula) {
             statusCode = 200;
             dadosAlunoMatricula = matricula;
@@ -153,6 +154,6 @@ app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, re
 
 });
 //Roda o serviço da API para ficar guardando requisições
-app.listen(8080, function () {
+app.listen(8080, function() {
     console.log('Servidor aguardando requisições na porta 8080')
 })
