@@ -229,7 +229,6 @@ const getListaAlunosCursoStatus = function (filtro, filtroStatus) {
 
     if (listaAlunosCursoJson !== undefined && statusEspecificado !== undefined) {
         listaAlunosCursoJson.forEach(dadosAlunosCurso => {
-            const curso = dadosAlunosCurso.curso
             dadosAlunosCurso.curso.forEach(infoCurso => {
                 if (cursoEspecificado == infoCurso.sigla && statusEspecificado == dadosAlunosCurso.status) {
 
@@ -268,6 +267,60 @@ const getListaAlunosCursoStatus = function (filtro, filtroStatus) {
         return status;
     }
 }
+//Função que recupera uma lista de todos os alunos com o ano de conclusão especificado.
+const getListaAlunosCursoConclusao = function (filtro, filtroAno) {
+    const cursoEspecificado = filtro.toUpperCase();
+    const anoEspecificado = filtroAno;
+    const listaAlunosCursoJson = caminhoAlunos.slice()
+    const listaAlunosCursoNewJson = {}
+    const listaAlunosCursoNewArray = []
+    let status = false;
+
+    if (listaAlunosCursoJson !== undefined && anoEspecificado !== undefined && !isNaN(anoEspecificado)) {
+
+        listaAlunosCursoJson.forEach(dadosAlunosCurso => {
+
+            dadosAlunosCurso.curso.forEach(infoCurso => {
+                // console.log(dadosAlunosCurso);
+
+                if (cursoEspecificado == infoCurso.sigla && anoEspecificado == infoCurso.conclusao) {
+
+
+                    const infoAluno = {}
+
+                    infoAluno.nome = dadosAlunosCurso.nome
+                    infoAluno.matricula = dadosAlunosCurso.matricula
+                    infoAluno.image = dadosAlunosCurso.foto
+                    infoAluno.sexo = dadosAlunosCurso.sexo
+
+                    infoAluno.nomeCurso = infoCurso.nome
+                    infoAluno.sigla = infoCurso.sigla
+                    infoAluno.conclusao = infoCurso.conclusao
+                    infoAluno.disciplinas = infoCurso.disciplinas
+
+                    infoAluno.status = dadosAlunosCurso.status
+
+                    listaAlunosCursoNewArray.push(infoAluno);
+
+                    status = true
+                } else {
+                    return status
+                }
+            });
+            listaAlunosCursoNewJson.alunos = listaAlunosCursoNewArray;
+
+            ''
+        });
+    } else {
+        return status;
+    }
+    if (status) {
+        return listaAlunosCursoNewJson;
+    } else {
+        return status;
+    }
+}
+// console.log(getListaAlunosCursoConclusao('ds',2022));
 
 // getListaCursos();
 // getListaAlunos();
@@ -282,5 +335,6 @@ module.exports = {
     getDadosAluno,
     getListaAlunosCurso,
     getListaAlunosStatus,
-    getListaAlunosCursoStatus
+    getListaAlunosCursoStatus,
+    getListaAlunosCursoConclusao
 }

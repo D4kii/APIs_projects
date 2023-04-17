@@ -57,13 +57,14 @@ app.get('/v1/lion-school/cursos', cors(), async function (request, response, nex
 
 })
 //EndPoint - Que retorna uma lista de todos os alunos 
-//matriculados na escola e seus respectivos dados, ou alunos específicos de um status estipulado ou curso.
+//matriculados na escola e seus dados, ou alunos específicos de um status estipulado, curso ou ano.
 app.get('/v1/lion-school/alunos', cors(), async function (request, response, next) {
 
     let alunos;
     let dadosAluno = {};
-    let siglaCurso = request.query.cursos
-    let status = request.query.status
+    let anoConclusao = request.query.conclusao;
+    let siglaCurso = request.query.cursos;
+    let status = request.query.status;
     let statusCode;
 
     if (siglaCurso !== undefined && status !== undefined) {
@@ -75,7 +76,7 @@ app.get('/v1/lion-school/alunos', cors(), async function (request, response, nex
 
             let alunosCurso = dadosCursos.getListaAlunosCursoStatus(siglaCurso, status);
             if (alunosCurso) {
-                
+
                 statusCode = 200;
                 dadosAluno = alunosCurso;
 
@@ -87,6 +88,23 @@ app.get('/v1/lion-school/alunos', cors(), async function (request, response, nex
             console.log(dadosAluno);
         }
 
+    } else if (anoConclusao !== undefined && siglaCurso !== undefined) {
+        //variável para chamar a função que lista os cursos
+        if (isNaN(anoConclusao) || !isNaN(siglaCurso)) {
+            response.status(400);
+            dadosAluno.message = 'Não foi possível processar pois os dados de entrada que foi enviado não corresponde ao exigido, confira o valor, precisa ser a sigla do curso e o ano de conclusão do aluno'
+        } else {
+
+            let alunoCursoConclusao = dadosCursos.getListaAlunosCursoConclusao(siglaCurso, anoConclusao);
+
+            if (alunoCursoConclusao) {
+                statusCode = 200;
+                dadosAluno = alunoCursoConclusao;
+            } else {
+                statusCode = 404;
+                dadosAluno.message = 'Não foi possível encontrar os dados.'
+            }
+        }
     } else if (siglaCurso !== undefined && status == undefined) {
         //variável para chamar a função que lista os cursos
         if (!isNaN(siglaCurso)) {
@@ -108,7 +126,7 @@ app.get('/v1/lion-school/alunos', cors(), async function (request, response, nex
 
     }
     else if (status !== undefined && siglaCurso == undefined) {
-        
+
         //variável para chamar a função que lista os cursos
         if (!isNaN(status)) {
             response.status(400);
