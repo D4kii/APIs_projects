@@ -2,13 +2,13 @@ var cursos = [
     {
         "nome"  :   "001 - Técnico em Desenvolvimento de Sistemas",
         "sigla" :   "DS",
-        "icone" :   "https://image.shutterstock.com/image-vector/api-interface-vector-icon-600w-659203513.jpg",
+        "icone" :   "https://cdn2.iconfinder.com/data/icons/font-awesome/1792/code-512.png",
         "carga" :   "1200",
     },
     {
         "nome"  :   "002 - Técnico em Redes de Computadores",
         "sigla" :   "RDS",
-        "icone" :   "https://img.icons8.com/ultraviolet/344/thin-client.png",
+        "icone" :   "https://cdn-icons-png.flaticon.com/512/37/37414.png",
         "carga" :   "1200"
     }
 ];
